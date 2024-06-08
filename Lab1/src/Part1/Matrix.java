@@ -5,8 +5,8 @@ import java.util.Random;
 
 public class Matrix {
     private int[][] matrix;
-    private int size;
-    private Random random;
+    private final int size;
+    private final Random random;
 
     public Matrix(int size) {
         this.size = size;
