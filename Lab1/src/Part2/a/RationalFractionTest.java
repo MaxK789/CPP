@@ -1,6 +1,5 @@
 package Part2.a;
 
-import Part2.a.RationalFraction;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
