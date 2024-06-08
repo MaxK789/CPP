@@ -1,3 +1,6 @@
+package Part1;
+
+import Part1.Matrix;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
