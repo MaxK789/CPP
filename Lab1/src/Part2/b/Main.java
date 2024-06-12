@@ -1,6 +1,7 @@
 package Part2.b;
 
 import Part2.a.RationalFraction;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -9,34 +10,48 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        // Введення кількості кіл
-        System.out.print("Введіть кількість кіл: ");
-        int k = scanner.nextInt();
+        int k = 0;
+        while (true) {
+            System.out.print("Введіть кількість кіл (не менше трьох): ");
+            if (scanner.hasNextInt()) {
+                k = scanner.nextInt();
+                if (k >= 3) {
+                    break;
+                } else {
+                    System.out.println("Кількість кіл повинна бути не менше трьох. Будь ласка, спробуйте ще раз.");
+                }
+            } else {
+                System.out.println("Неправильний формат введених даних. Будь ласка, введіть ціле число.");
+                scanner.next();
+            }
+        }
 
-        // Ініціалізація списку кіл
         List<Circle> circles = new ArrayList<>();
 
-        // Введення значень для списку кіл
         for (int i = 0; i < k; i++) {
-            System.out.print("Введіть чисельник координати X центру кола " + (i + 1) + ": ");
-            int mX = scanner.nextInt();
-            System.out.print("Введіть знаменник координати X центру кола " + (i + 1) + ": ");
-            int nX = scanner.nextInt();
+            System.out.println("Для кола " + (i + 1) + ":");
+            RationalFraction centerX = inputRationalFraction(scanner, "X");
+            RationalFraction centerY = inputRationalFraction(scanner, "Y");
 
-            System.out.print("Введіть чисельник координати Y центру кола " + (i + 1) + ": ");
-            int mY = scanner.nextInt();
-            System.out.print("Введіть знаменник координати Y центру кола " + (i + 1) + ": ");
-            int nY = scanner.nextInt();
+            double radius;
+            while (true) {
+                System.out.print("Введіть радіус кола: ");
+                if (scanner.hasNextDouble()) {
+                    radius = scanner.nextDouble();
+                    if (radius > 0) {
+                        break;
+                    } else {
+                        System.out.println("Радіус повинен бути більше нуля. Будь ласка, спробуйте ще раз.");
+                    }
+                } else {
+                    System.out.println("Неправильний формат введених даних. Будь ласка, введіть число.");
+                    scanner.next();
+                }
+            }
 
-            System.out.print("Введіть радіус кола " + (i + 1) + ": ");
-            double radius = scanner.nextDouble();
-
-            RationalFraction centerX = new RationalFraction(mX, nX);
-            RationalFraction centerY = new RationalFraction(mY, nY);
             circles.add(new Circle(centerX, centerY, radius));
         }
 
-        // Визначення найбільшого і найменшого за площею кола
         Circle maxAreaCircle = circles.get(0);
         Circle minAreaCircle = circles.get(0);
 
@@ -52,7 +67,6 @@ public class Main {
         System.out.println("Коло з найбільшою площею: " + maxAreaCircle);
         System.out.println("Коло з найменшою площею: " + minAreaCircle);
 
-        // Визначення найбільшого і найменшого за периметром кола
         Circle maxPerimeterCircle = circles.get(0);
         Circle minPerimeterCircle = circles.get(0);
 
@@ -68,9 +82,10 @@ public class Main {
         System.out.println("Коло з найбільшим периметром: " + maxPerimeterCircle);
         System.out.println("Коло з найменшим периметром: " + minPerimeterCircle);
 
-        // Визначення груп кіл, центри яких лежать на одній прямій
         System.out.println("Групи кіл, центри яких лежать на одній прямій:");
         findCirclesOnSameLine(circles);
+
+        scanner.close();
     }
 
     public static void findCirclesOnSameLine(List<Circle> circles) {
@@ -82,6 +97,9 @@ public class Main {
                     Circle c3 = circles.get(k);
                     if (areCollinear(c1, c2, c3)) {
                         System.out.println("Кола з центрами на одній прямій: " + c1 + ", " + c2 + ", " + c3);
+                    }
+                    else {
+                        System.out.println("Немає груп кіл з центрами на одній прямій.");
                     }
                 }
             }
@@ -96,7 +114,32 @@ public class Main {
         RationalFraction x3 = c3.getCenterX();
         RationalFraction y3 = c3.getCenterY();
 
-        // Перевірка на колінеарність за допомогою визначника
         return x1.getM() * (y2.getM() - y3.getM()) + x2.getM() * (y3.getM() - y1.getM()) + x3.getM() * (y1.getM() - y2.getM()) == 0;
+    }
+
+    private static RationalFraction inputRationalFraction(Scanner scanner, String axis) {
+        int m, n;
+        while (true) {
+            System.out.print("Введіть чисельник координати " + axis + " центру кола: ");
+            if (scanner.hasNextInt()) {
+                m = scanner.nextInt();
+                System.out.print("Введіть знаменник координати " + axis + " центру кола (не може бути нуль): ");
+                if (scanner.hasNextInt()) {
+                    n = scanner.nextInt();
+                    if (n != 0) {
+                        break;
+                    } else {
+                        System.out.println("Знаменник не може бути нуль. Будь ласка, спробуйте ще раз.");
+                    }
+                } else {
+                    System.out.println("Неправильний формат введених даних. Будь ласка, введіть ціле число.");
+                    scanner.next();
+                }
+            } else {
+                System.out.println("Неправильний формат введених даних. Будь ласка, введіть ціле число.");
+                scanner.next();
+            }
+        }
+        return new RationalFraction(m, n);
     }
 }
