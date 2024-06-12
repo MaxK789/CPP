@@ -18,10 +18,10 @@ public class Main {
                 if (k >= 3) {
                     break;
                 } else {
-                    System.out.println("Кількість кіл повинна бути не менше трьох. Будь ласка, спробуйте ще раз.");
+                    System.out.println("Кількість кіл повинна бути не менше трьох.");
                 }
             } else {
-                System.out.println("Неправильний формат введених даних. Будь ласка, введіть ціле число.");
+                System.out.println("Неправильний формат введених даних.");
                 scanner.next();
             }
         }
@@ -41,10 +41,10 @@ public class Main {
                     if (radius > 0) {
                         break;
                     } else {
-                        System.out.println("Радіус повинен бути більше нуля. Будь ласка, спробуйте ще раз.");
+                        System.out.println("Радіус повинен бути більше нуля.");
                     }
                 } else {
-                    System.out.println("Неправильний формат введених даних. Будь ласка, введіть число.");
+                    System.out.println("Неправильний формат введених даних.");
                     scanner.next();
                 }
             }
@@ -96,10 +96,7 @@ public class Main {
                     Circle c2 = circles.get(j);
                     Circle c3 = circles.get(k);
                     if (areCollinear(c1, c2, c3)) {
-                        System.out.println("Кола з центрами на одній прямій: " + c1 + ", " + c2 + ", " + c3);
-                    }
-                    else {
-                        System.out.println("Немає груп кіл з центрами на одній прямій.");
+                        System.out.println(c1 + ", " + c2 + ", " + c3);
                     }
                 }
             }
@@ -123,20 +120,20 @@ public class Main {
             System.out.print("Введіть чисельник координати " + axis + " центру кола: ");
             if (scanner.hasNextInt()) {
                 m = scanner.nextInt();
-                System.out.print("Введіть знаменник координати " + axis + " центру кола (не може бути нуль): ");
+                System.out.print("Введіть знаменник координати " + axis + " центру кола: ");
                 if (scanner.hasNextInt()) {
                     n = scanner.nextInt();
                     if (n != 0) {
                         break;
                     } else {
-                        System.out.println("Знаменник не може бути нуль. Будь ласка, спробуйте ще раз.");
+                        System.out.println("Знаменник не може бути нуль.");
                     }
                 } else {
-                    System.out.println("Неправильний формат введених даних. Будь ласка, введіть ціле число.");
+                    System.out.println("Неправильний формат введених даних.");
                     scanner.next();
                 }
             } else {
-                System.out.println("Неправильний формат введених даних. Будь ласка, введіть ціле число.");
+                System.out.println("Неправильний формат введених даних.");
                 scanner.next();
             }
         }

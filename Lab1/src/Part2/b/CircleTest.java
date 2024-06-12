@@ -14,7 +14,6 @@ public class CircleTest {
 
         Circle circle = new Circle(centerX, centerY, radius);
 
-
         assertEquals(78.5, circle.calculateArea(), 0.1);
     }
 
@@ -25,7 +24,6 @@ public class CircleTest {
         double radius = 5.0;
 
         Circle circle = new Circle(centerX, centerY, radius);
-
 
         assertEquals(31.4, circle.calculatePerimeter(), 0.1);
     }
