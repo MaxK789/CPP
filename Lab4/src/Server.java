@@ -93,19 +93,6 @@ public class Server extends JFrame {
         g.fillOval(x, y, 50, 50);
     }
 
-    private void showMessages() {
-        StringBuilder sb = new StringBuilder("Messages received from client:\n");
-        for (int i = 0; i < messagesReceived.size(); i++) {
-            sb.append(i + 1).append(": ").append(messagesReceived.get(i)).append("\n");
-        }
-        JOptionPane.showMessageDialog(this, sb.toString(), "Received Messages", JOptionPane.INFORMATION_MESSAGE);
-    }
-
-    private void clearMessages() {
-        messagesReceived.clear();
-        JOptionPane.showMessageDialog(this, "Received messages cleared.", "Messages Cleared", JOptionPane.INFORMATION_MESSAGE);
-    }
-
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             try {
