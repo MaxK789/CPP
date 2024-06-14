@@ -1,10 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Server extends JFrame {
@@ -14,36 +14,35 @@ public class Server extends JFrame {
     private ObjectOutputStream outputStream;
     private ObjectInputStream inputStream;
 
-    ServerSocket serverSocket = new ServerSocket(PORT);
-
-    private final JPanel drawPanel;
+    private JPanel drawPanel;
+    private List<String> messagesReceived = new ArrayList<>();
 
     public Server() throws IOException {
-        setTitle("Rectangle Server");
+        setTitle("Server");
         setSize(800, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        JButton rectangleButton = new JButton("Draw Rectangle");
-        rectangleButton.addActionListener(e -> sendDrawCommand());
 
         drawPanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                // Here we can draw rectangles if needed
             }
         };
         drawPanel.setBackground(Color.WHITE);
 
         setLayout(new BorderLayout());
-        add(rectangleButton, BorderLayout.NORTH);
         add(drawPanel, BorderLayout.CENTER);
+
+        JButton rectangleButton = new JButton("Draw Rectangle");
+        rectangleButton.addActionListener(e -> sendDrawCommand("rectangle"));
+        add(rectangleButton, BorderLayout.NORTH);
 
         setupServer();
     }
 
     private void setupServer() {
         try {
+            ServerSocket serverSocket = new ServerSocket(PORT);
             System.out.println("Server waiting for connections on port " + PORT);
 
             Socket clientSocket = serverSocket.accept();
@@ -52,20 +51,19 @@ public class Server extends JFrame {
             outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
             inputStream = new ObjectInputStream(clientSocket.getInputStream());
 
-            Thread receiverThread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        while (true) {
-                            String command = (String) inputStream.readObject();
-                            if (command.equals("circle")) {
-                                // Handle circle command received from client
-                                handleCircle();
-                            }
+            Thread receiverThread = new Thread(() -> {
+                try {
+                    while (true) {
+                        String command = (String) inputStream.readObject();
+                        if (command.equals("circle")) {
+                            handleCircle();
+                        } else {
+                            messagesReceived.add(command);
+                            JOptionPane.showMessageDialog(Server.this, command, "Message from Client", JOptionPane.INFORMATION_MESSAGE);
                         }
-                    } catch (IOException | ClassNotFoundException e) {
-                        e.printStackTrace();
                     }
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
                 }
             });
             receiverThread.start();
@@ -75,9 +73,9 @@ public class Server extends JFrame {
         }
     }
 
-    private void sendDrawCommand() {
+    private void sendDrawCommand(String command) {
         try {
-            outputStream.writeObject("rectangle");
+            outputStream.writeObject(command);
             outputStream.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -85,16 +83,27 @@ public class Server extends JFrame {
     }
 
     private void handleCircle() {
-        // Handle the drawing of circles on the UI
         Graphics g = drawPanel.getGraphics();
         g.setColor(Color.RED);
 
-        // Generate random coordinates
         Random random = new Random();
-        int x = random.nextInt(drawPanel.getWidth() - 50); // -50 to ensure the shape stays within bounds
-        int y = random.nextInt(drawPanel.getHeight() - 50); // -50 to ensure the shape stays within bounds
+        int x = random.nextInt(drawPanel.getWidth() - 50);
+        int y = random.nextInt(drawPanel.getHeight() - 50);
 
-        g.fillOval(x, y, 50, 50); // Draw circle at random position
+        g.fillOval(x, y, 50, 50);
+    }
+
+    private void showMessages() {
+        StringBuilder sb = new StringBuilder("Messages received from client:\n");
+        for (int i = 0; i < messagesReceived.size(); i++) {
+            sb.append(i + 1).append(": ").append(messagesReceived.get(i)).append("\n");
+        }
+        JOptionPane.showMessageDialog(this, sb.toString(), "Received Messages", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void clearMessages() {
+        messagesReceived.clear();
+        JOptionPane.showMessageDialog(this, "Received messages cleared.", "Messages Cleared", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public static void main(String[] args) {
@@ -107,4 +116,3 @@ public class Server extends JFrame {
         });
     }
 }
-
