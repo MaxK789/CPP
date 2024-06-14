@@ -19,9 +19,9 @@ public class MovingShapes extends Application {
     private static final int NUM_CIRCLES = 10;
     private static final int NUM_RECTANGLES = 10;
 
-    private List<Circle> circles = new ArrayList<>();
-    private List<Rectangle> rectanglesLeft = new ArrayList<>();
-    private List<Rectangle> rectanglesRight = new ArrayList<>();
+    private final List<Circle> circles = new ArrayList<>();
+    private final List<Rectangle> rectanglesLeft = new ArrayList<>();
+    private final List<Rectangle> rectanglesRight = new ArrayList<>();
 
     @Override
     public void start(Stage primaryStage) {
@@ -52,7 +52,7 @@ public class MovingShapes extends Application {
             Rectangle rectangle = new Rectangle(50, 30);
             rectangle.setFill(Color.RED);
             rectangle.setTranslateX(SCREEN_WIDTH - 50);
-            rectangle.setTranslateY(50 + (i - NUM_RECTANGLES / 2) * 70);
+            rectangle.setTranslateY(50 + (i - (double) NUM_RECTANGLES / 2) * 70);
             rectanglesRight.add(rectangle);
             root.getChildren().add(rectangle);
         }
