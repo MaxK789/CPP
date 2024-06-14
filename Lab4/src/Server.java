@@ -1,34 +1,30 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
-import java.net.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.Random;
 
 public class Server extends JFrame {
 
     private static final int PORT = 12345;
 
-    private ServerSocket serverSocket;
-    private Socket clientSocket;
     private ObjectOutputStream outputStream;
     private ObjectInputStream inputStream;
 
-    private JButton rectangleButton;
-    private JPanel drawPanel;
+    ServerSocket serverSocket = new ServerSocket(PORT);
 
-    public Server() {
+    private final JPanel drawPanel;
+
+    public Server() throws IOException {
         setTitle("Rectangle Server");
         setSize(800, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        rectangleButton = new JButton("Draw Rectangle");
-        rectangleButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                sendDrawCommand("rectangle");
-            }
-        });
+        JButton rectangleButton = new JButton("Draw Rectangle");
+        rectangleButton.addActionListener(e -> sendDrawCommand());
 
         drawPanel = new JPanel() {
             @Override
@@ -48,10 +44,9 @@ public class Server extends JFrame {
 
     private void setupServer() {
         try {
-            serverSocket = new ServerSocket(PORT);
             System.out.println("Server waiting for connections on port " + PORT);
 
-            clientSocket = serverSocket.accept();
+            Socket clientSocket = serverSocket.accept();
             System.out.println("Client connected: " + clientSocket.getInetAddress().getHostName());
 
             outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
@@ -80,9 +75,9 @@ public class Server extends JFrame {
         }
     }
 
-    private void sendDrawCommand(String command) {
+    private void sendDrawCommand() {
         try {
-            outputStream.writeObject(command);
+            outputStream.writeObject("rectangle");
             outputStream.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -103,10 +98,11 @@ public class Server extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
+        SwingUtilities.invokeLater(() -> {
+            try {
                 new Server().setVisible(true);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         });
     }
