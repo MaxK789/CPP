@@ -17,7 +17,7 @@ public class Client extends JFrame {
     private ObjectInputStream inputStream;
 
     private JPanel drawPanel;
-    private List<String> messagesSent = new ArrayList<>();
+    private List<String> messagesReceived = new ArrayList<>();
 
     public Client() {
         setTitle("Client");
@@ -45,6 +45,8 @@ public class Client extends JFrame {
         connectToServer();
     }
 
+    // Inside the Client class
+
     private void setupHotkeys() {
         setupKeyStroke(KeyEvent.VK_P, InputEvent.CTRL_DOWN_MASK, "sendMessage1", "Привіт!");
         setupKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_DOWN_MASK, "sendMessage2", "Як справи?");
@@ -53,6 +55,20 @@ public class Client extends JFrame {
         setupKeyStroke(KeyEvent.VK_R, InputEvent.ALT_DOWN_MASK, "showMessages", this::showMessages);
         setupKeyStroke(KeyEvent.VK_D, InputEvent.ALT_DOWN_MASK, "clearMessages", this::clearMessages);
     }
+
+    private void showMessages() {
+        StringBuilder sb = new StringBuilder("Messages received from server:\n");
+        for (int i = 0; i < messagesReceived.size(); i++) {
+            sb.append(i + 1).append(": ").append(messagesReceived.get(i)).append("\n");
+        }
+        JOptionPane.showMessageDialog(this, sb.toString(), "Received Messages", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void clearMessages() {
+        messagesReceived.clear();
+        JOptionPane.showMessageDialog(this, "Received messages cleared.", "Messages Cleared", JOptionPane.INFORMATION_MESSAGE);
+    }
+
 
     private void setupKeyStroke(int keyCode, int modifiers, String actionKey, String message) {
         KeyStroke keyStroke = KeyStroke.getKeyStroke(keyCode, modifiers);
@@ -75,6 +91,8 @@ public class Client extends JFrame {
             }
         });
     }
+
+    // Inside the Client class
 
     private void connectToServer() {
         try {
@@ -103,6 +121,7 @@ public class Client extends JFrame {
         }
     }
 
+
     private void sendDrawCommand(String command) {
         try {
             outputStream.writeObject(command);
@@ -116,7 +135,7 @@ public class Client extends JFrame {
         try {
             outputStream.writeObject(message);
             outputStream.flush();
-            messagesSent.add(message);
+            messagesReceived.add(message);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -131,19 +150,6 @@ public class Client extends JFrame {
         int y = random.nextInt(drawPanel.getHeight() - 50);
 
         g.fillRect(x, y, 50, 50);
-    }
-
-    private void showMessages() {
-        StringBuilder sb = new StringBuilder("Messages sent to server:\n");
-        for (int i = 0; i < messagesSent.size(); i++) {
-            sb.append(i + 1).append(": ").append(messagesSent.get(i)).append("\n");
-        }
-        JOptionPane.showMessageDialog(this, sb.toString(), "Sent Messages", JOptionPane.INFORMATION_MESSAGE);
-    }
-
-    private void clearMessages() {
-        messagesSent.clear();
-        JOptionPane.showMessageDialog(this, "Sent messages cleared.", "Messages Cleared", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public static void main(String[] args) {

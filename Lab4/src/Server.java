@@ -1,11 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 import java.io.*;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class Server extends JFrame {
 
@@ -37,7 +36,39 @@ public class Server extends JFrame {
         rectangleButton.addActionListener(e -> sendDrawCommand("rectangle"));
         add(rectangleButton, BorderLayout.NORTH);
 
+        setupHotkeys();
         setupServer();
+    }
+
+    private void setupHotkeys() {
+        setupKeyStroke(KeyEvent.VK_P, InputEvent.CTRL_DOWN_MASK, "sendMessage1", "Привіт!");
+        setupKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_DOWN_MASK, "sendMessage2", "Як справи?");
+        setupKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK, "sendMessage3", "До побачення!");
+
+        setupKeyStroke(KeyEvent.VK_R, InputEvent.ALT_DOWN_MASK, "showMessages", this::showMessages);
+        setupKeyStroke(KeyEvent.VK_D, InputEvent.ALT_DOWN_MASK, "clearMessages", this::clearMessages);
+    }
+
+    private void setupKeyStroke(int keyCode, int modifiers, String actionKey, String message) {
+        KeyStroke keyStroke = KeyStroke.getKeyStroke(keyCode, modifiers);
+        drawPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(keyStroke, actionKey);
+        drawPanel.getActionMap().put(actionKey, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                sendMessage(message);
+            }
+        });
+    }
+
+    private void setupKeyStroke(int keyCode, int modifiers, String actionKey, Runnable action) {
+        KeyStroke keyStroke = KeyStroke.getKeyStroke(keyCode, modifiers);
+        drawPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(keyStroke, actionKey);
+        drawPanel.getActionMap().put(actionKey, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                action.run();
+            }
+        });
     }
 
     private void setupServer() {
@@ -55,7 +86,7 @@ public class Server extends JFrame {
                 try {
                     while (true) {
                         String command = (String) inputStream.readObject();
-                        if (command.equals("circle")) {
+                        if (command.equals("rectangle")) {
                             handleCircle();
                         } else {
                             messagesReceived.add(command);
@@ -86,11 +117,32 @@ public class Server extends JFrame {
         Graphics g = drawPanel.getGraphics();
         g.setColor(Color.RED);
 
-        Random random = new Random();
-        int x = random.nextInt(drawPanel.getWidth() - 50);
-        int y = random.nextInt(drawPanel.getHeight() - 50);
+        int x = (int) (Math.random() * drawPanel.getWidth());
+        int y = (int) (Math.random() * drawPanel.getHeight());
 
         g.fillOval(x, y, 50, 50);
+    }
+
+    private void sendMessage(String message) {
+        try {
+            outputStream.writeObject(message);
+            outputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showMessages() {
+        StringBuilder sb = new StringBuilder("Messages received from client:\n");
+        for (int i = 0; i < messagesReceived.size(); i++) {
+            sb.append(i + 1).append(": ").append(messagesReceived.get(i)).append("\n");
+        }
+        JOptionPane.showMessageDialog(this, sb.toString(), "Received Messages", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void clearMessages() {
+        messagesReceived.clear();
+        JOptionPane.showMessageDialog(this, "Received messages cleared.", "Messages Cleared", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public static void main(String[] args) {
