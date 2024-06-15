@@ -41,9 +41,9 @@ public class Server extends JFrame {
     }
 
     private void setupHotkeys() {
-        setupKeyStroke(KeyEvent.VK_P, InputEvent.CTRL_DOWN_MASK, "sendMessage1", "Привіт!");
-        setupKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_DOWN_MASK, "sendMessage2", "Як справи?");
-        setupKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK, "sendMessage3", "До побачення!");
+        setupKeyStroke(KeyEvent.VK_P, InputEvent.CTRL_DOWN_MASK, "sendMessage1", "Hello!");
+        setupKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_DOWN_MASK, "sendMessage2", "How are you?");
+        setupKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK, "sendMessage3", "Goodbye!");
 
         setupKeyStroke(KeyEvent.VK_R, InputEvent.ALT_DOWN_MASK, "showMessages", this::showMessages);
         setupKeyStroke(KeyEvent.VK_D, InputEvent.ALT_DOWN_MASK, "clearMessages", this::clearMessages);
@@ -127,7 +127,7 @@ public class Server extends JFrame {
         try {
             outputStream.writeObject(message);
             outputStream.flush();
-            messages.add(message + " (from Server)"); // Track sent messages
+            messages.add(message + " (from Server)");
         } catch (IOException e) {
             e.printStackTrace();
         }
