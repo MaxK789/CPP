@@ -14,7 +14,7 @@ public class Server extends JFrame {
     private ObjectInputStream inputStream;
 
     private JPanel drawPanel;
-    private List<String> messagesReceived = new ArrayList<>();
+    private List<String> messages = new ArrayList<>();
 
     public Server() throws IOException {
         setTitle("Server");
@@ -89,7 +89,7 @@ public class Server extends JFrame {
                         if (command.equals("rectangle")) {
                             handleCircle();
                         } else {
-                            messagesReceived.add(command);
+                            messages.add(command);
                             JOptionPane.showMessageDialog(Server.this, command, "Message from Client", JOptionPane.INFORMATION_MESSAGE);
                         }
                     }
@@ -127,22 +127,25 @@ public class Server extends JFrame {
         try {
             outputStream.writeObject(message);
             outputStream.flush();
+            messages.add(message + " (from Server)"); // Track sent messages
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     private void showMessages() {
-        StringBuilder sb = new StringBuilder("Messages received from client:\n");
-        for (int i = 0; i < messagesReceived.size(); i++) {
-            sb.append(i + 1).append(": ").append(messagesReceived.get(i)).append("\n");
+        StringBuilder sb = new StringBuilder("Messages:\n");
+
+        for (int i = 0; i < messages.size(); i++) {
+            sb.append(i + 1).append(": ").append(messages.get(i)).append("\n");
         }
-        JOptionPane.showMessageDialog(this, sb.toString(), "Received Messages", JOptionPane.INFORMATION_MESSAGE);
+
+        JOptionPane.showMessageDialog(this, sb.toString(), "All Messages", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void clearMessages() {
-        messagesReceived.clear();
-        JOptionPane.showMessageDialog(this, "Received messages cleared.", "Messages Cleared", JOptionPane.INFORMATION_MESSAGE);
+        messages.clear();
+        JOptionPane.showMessageDialog(this, "Messages cleared.", "Messages Cleared", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public static void main(String[] args) {
