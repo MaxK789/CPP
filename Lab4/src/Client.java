@@ -146,7 +146,7 @@ public class Client extends JFrame {
 
     private void clearMessages() {
         messages.clear();
-        JOptionPane.showMessageDialog(this, "Received messages cleared.", "Messages Cleared", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, "Messages cleared.", "Messages Cleared", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public static void main(String[] args) {
