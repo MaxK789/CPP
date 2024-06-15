@@ -135,7 +135,7 @@ public class Client extends JFrame {
     }
 
     private void showMessages() {
-        StringBuilder sb = new StringBuilder("Messages received from server:\n");
+        StringBuilder sb = new StringBuilder("Messages:\n");
 
         for (int i = 0; i < messages.size(); i++) {
             sb.append(i + 1).append(": ").append(messages.get(i)).append("\n");
