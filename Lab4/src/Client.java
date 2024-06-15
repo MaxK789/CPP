@@ -54,21 +54,6 @@ public class Client extends JFrame {
         setupKeyStroke(KeyEvent.VK_D, InputEvent.ALT_DOWN_MASK, "clearMessages", this::clearMessages);
     }
 
-    private void showMessages() {
-        StringBuilder sb = new StringBuilder("Messages received from server:\n");
-
-        for (int i = 0; i < messages.size(); i++) {
-            sb.append(i + 1).append(": ").append(messages.get(i)).append("\n");
-        }
-
-        JOptionPane.showMessageDialog(this, sb.toString(), "Received Messages", JOptionPane.INFORMATION_MESSAGE);
-    }
-
-    private void clearMessages() {
-        messages.clear();
-        JOptionPane.showMessageDialog(this, "Received messages cleared.", "Messages Cleared", JOptionPane.INFORMATION_MESSAGE);
-    }
-
     private void setupKeyStroke(int keyCode, int modifiers, String actionKey, String message) {
         KeyStroke keyStroke = KeyStroke.getKeyStroke(keyCode, modifiers);
         drawPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(keyStroke, actionKey);
@@ -128,6 +113,17 @@ public class Client extends JFrame {
         }
     }
 
+    private void handleRectangle() {
+        Graphics g = drawPanel.getGraphics();
+        g.setColor(Color.BLUE);
+
+        Random random = new Random();
+        int x = random.nextInt(drawPanel.getWidth() - 50);
+        int y = random.nextInt(drawPanel.getHeight() - 50);
+
+        g.fillRect(x, y, 50, 50);
+    }
+
     private void sendMessage(String message) {
         try {
             outputStream.writeObject(message);
@@ -138,15 +134,19 @@ public class Client extends JFrame {
         }
     }
 
-    private void handleRectangle() {
-        Graphics g = drawPanel.getGraphics();
-        g.setColor(Color.BLUE);
+    private void showMessages() {
+        StringBuilder sb = new StringBuilder("Messages received from server:\n");
 
-        Random random = new Random();
-        int x = random.nextInt(drawPanel.getWidth() - 50);
-        int y = random.nextInt(drawPanel.getHeight() - 50);
+        for (int i = 0; i < messages.size(); i++) {
+            sb.append(i + 1).append(": ").append(messages.get(i)).append("\n");
+        }
 
-        g.fillRect(x, y, 50, 50);
+        JOptionPane.showMessageDialog(this, sb.toString(), "Received Messages", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void clearMessages() {
+        messages.clear();
+        JOptionPane.showMessageDialog(this, "Received messages cleared.", "Messages Cleared", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public static void main(String[] args) {
