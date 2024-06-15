@@ -91,8 +91,6 @@ public class Client extends JFrame {
         });
     }
 
-    // Inside the Client class
-
     private void connectToServer() {
         try {
             socket = new Socket(SERVER_IP, PORT);

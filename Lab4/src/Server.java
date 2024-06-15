@@ -5,6 +5,7 @@ import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Server extends JFrame {
 
@@ -86,7 +87,7 @@ public class Server extends JFrame {
                 try {
                     while (true) {
                         String command = (String) inputStream.readObject();
-                        if (command.equals("rectangle")) {
+                        if (command.equals("circle")) {
                             handleCircle();
                         } else {
                             messages.add(command);
@@ -117,8 +118,9 @@ public class Server extends JFrame {
         Graphics g = drawPanel.getGraphics();
         g.setColor(Color.RED);
 
-        int x = (int) (Math.random() * drawPanel.getWidth());
-        int y = (int) (Math.random() * drawPanel.getHeight());
+        Random random = new Random();
+        int x = random.nextInt(drawPanel.getWidth() - 50);
+        int y = random.nextInt(drawPanel.getHeight() - 50);
 
         g.fillOval(x, y, 50, 50);
     }
