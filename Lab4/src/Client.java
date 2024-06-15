@@ -17,7 +17,7 @@ public class Client extends JFrame {
     private ObjectInputStream inputStream;
 
     private JPanel drawPanel;
-    private List<String> messagesReceived = new ArrayList<>();
+    private List<String> messages = new ArrayList<>();
 
     public Client() {
         setTitle("Client");
@@ -45,12 +45,10 @@ public class Client extends JFrame {
         connectToServer();
     }
 
-    // Inside the Client class
-
     private void setupHotkeys() {
         setupKeyStroke(KeyEvent.VK_P, InputEvent.CTRL_DOWN_MASK, "sendMessage1", "Привіт!");
         setupKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_DOWN_MASK, "sendMessage2", "Як справи?");
-        setupKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK, "sendMessage3", "До побачення!");
+        setupKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_DOWN_MASK, "sendMessage3", "До побачення!");
 
         setupKeyStroke(KeyEvent.VK_R, InputEvent.ALT_DOWN_MASK, "showMessages", this::showMessages);
         setupKeyStroke(KeyEvent.VK_D, InputEvent.ALT_DOWN_MASK, "clearMessages", this::clearMessages);
@@ -58,17 +56,18 @@ public class Client extends JFrame {
 
     private void showMessages() {
         StringBuilder sb = new StringBuilder("Messages received from server:\n");
-        for (int i = 0; i < messagesReceived.size(); i++) {
-            sb.append(i + 1).append(": ").append(messagesReceived.get(i)).append("\n");
+
+        for (int i = 0; i < messages.size(); i++) {
+            sb.append(i + 1).append(": ").append(messages.get(i)).append("\n");
         }
+
         JOptionPane.showMessageDialog(this, sb.toString(), "Received Messages", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void clearMessages() {
-        messagesReceived.clear();
+        messages.clear();
         JOptionPane.showMessageDialog(this, "Received messages cleared.", "Messages Cleared", JOptionPane.INFORMATION_MESSAGE);
     }
-
 
     private void setupKeyStroke(int keyCode, int modifiers, String actionKey, String message) {
         KeyStroke keyStroke = KeyStroke.getKeyStroke(keyCode, modifiers);
@@ -107,6 +106,7 @@ public class Client extends JFrame {
                         if (command.equals("rectangle")) {
                             handleRectangle();
                         } else {
+                            messages.add(command);
                             JOptionPane.showMessageDialog(Client.this, command, "Message from Server", JOptionPane.INFORMATION_MESSAGE);
                         }
                     }
@@ -121,7 +121,6 @@ public class Client extends JFrame {
         }
     }
 
-
     private void sendDrawCommand(String command) {
         try {
             outputStream.writeObject(command);
@@ -135,7 +134,7 @@ public class Client extends JFrame {
         try {
             outputStream.writeObject(message);
             outputStream.flush();
-            messagesReceived.add(message);
+            messages.add(message);
         } catch (IOException e) {
             e.printStackTrace();
         }
