@@ -141,7 +141,7 @@ public class Client extends JFrame {
             sb.append(i + 1).append(": ").append(messages.get(i)).append("\n");
         }
 
-        JOptionPane.showMessageDialog(this, sb.toString(), "Received Messages", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, sb.toString(), "All Messages", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void clearMessages() {
