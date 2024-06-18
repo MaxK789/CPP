@@ -1,4 +1,5 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TravelAgency {
     private static TravelAgency instance = null;
@@ -40,9 +41,9 @@ public class TravelAgency {
         return properties;
     }
 
-    public Property getPropertyById(String id) {
+    public Property getPropertyById(int id) {
         for (Property property : properties) {
-            if (property.getId().equals(id)) {
+            if (property.getId() == id) {
                 return property;
             }
         }

@@ -1,19 +1,23 @@
 public class Property {
-    private String id;
+    private int id;
     private String name;
     private String description;
     private double pricePerNight;
     private Landlord landlord;
 
-    public Property(String id, String name, String description, double pricePerNight, Landlord landlord) {
-        this.id = id;
+    private static int nextId = 1; // Static variable to keep track of next available ID
+
+    public Property(String name, String description, double pricePerNight, Landlord landlord) {
+        this.id = nextId++;
         this.name = name;
         this.description = description;
         this.pricePerNight = pricePerNight;
         this.landlord = landlord;
     }
 
-    public String getId() {
+    // Getter methods
+
+    public int getId() {
         return id;
     }
 

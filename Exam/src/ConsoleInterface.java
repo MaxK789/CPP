@@ -105,7 +105,7 @@ public class ConsoleInterface {
         searchProperties();
         System.out.print("Enter property ID to book: ");
         String propertyId = scanner.nextLine();
-        Property property = travelAgency.getPropertyById(propertyId);
+        Property property = travelAgency.getPropertyById(Integer.parseInt(propertyId));
         if (property != null) {
             Booking booking = new Booking(UUID.randomUUID().toString(), property, customer);
             travelAgency.addBooking(booking);
@@ -159,16 +159,17 @@ public class ConsoleInterface {
         String description = scanner.nextLine();
         System.out.print("Price per night: ");
         double pricePerNight = readDoubleInput();
-        Property property = new Property(UUID.randomUUID().toString(), name, description, pricePerNight, landlord);
+        Property property = new Property(name, description, pricePerNight, landlord);
         travelAgency.addProperty(property);
-        System.out.println("Property added successfully.");
+        System.out.println("Property added successfully. Property ID: " + property.getId());
     }
+
 
     private void editProperty() {
         viewProperties();
         System.out.print("Enter property ID to edit: ");
         String propertyId = scanner.nextLine();
-        Property property = travelAgency.getPropertyById(propertyId);
+        Property property = travelAgency.getPropertyById(Integer.parseInt(propertyId));
         if (property != null) {
             System.out.print("New name: ");
             String name = scanner.nextLine();
@@ -177,7 +178,7 @@ public class ConsoleInterface {
             System.out.print("New price per night: ");
             double pricePerNight = readDoubleInput();
             // For simplicity, create a new property and replace the old one.
-            travelAgency.addProperty(new Property(propertyId, name, description, pricePerNight, property.getLandlord()));
+            travelAgency.addProperty(new Property(name, description, pricePerNight, property.getLandlord()));
             System.out.println("Property updated successfully.");
         } else {
             System.out.println("Invalid property ID.");
@@ -214,25 +215,26 @@ public class ConsoleInterface {
 
     private void initializeDefaultData() {
         // Add default landlords
-        Landlord landlord1 = new Landlord("Bill", "123");
-        Landlord landlord2 = new Landlord("John", "123");
+        Landlord landlord1 = new Landlord("landlord1", "password1");
+        Landlord landlord2 = new Landlord("landlord2", "password2");
         travelAgency.addUser(landlord1);
         travelAgency.addUser(landlord2);
 
         // Add default customers
-        Customer customer1 = new Customer("Dan", "123");
-        Customer customer2 = new Customer("Alex", "123");
+        Customer customer1 = new Customer("customer1", "password1");
+        Customer customer2 = new Customer("customer2", "password2");
         travelAgency.addUser(customer1);
         travelAgency.addUser(customer2);
 
-        // Add default properties
-        Property property1 = new Property(UUID.randomUUID().toString(), "Ocean View Apartment", "A beautiful apartment with an ocean view.", 150.00, landlord1);
-        Property property2 = new Property(UUID.randomUUID().toString(), "Mountain Cabin", "A cozy cabin in the mountains.", 100.00, landlord1);
-        Property property3 = new Property(UUID.randomUUID().toString(), "City Center Studio", "A modern studio in the city center.", 200.00, landlord2);
+        // Add default properties with sequential IDs
+        Property property1 = new Property("Ocean View Apartment", "A beautiful apartment with an ocean view.", 150.00, landlord1);
+        Property property2 = new Property("Mountain Cabin", "A cozy cabin in the mountains.", 100.00, landlord1);
+        Property property3 = new Property("City Center Studio", "A modern studio in the city center.", 200.00, landlord2);
         travelAgency.addProperty(property1);
         travelAgency.addProperty(property2);
         travelAgency.addProperty(property3);
     }
+
 
     private int readIntegerInput() {
         while (true) {
