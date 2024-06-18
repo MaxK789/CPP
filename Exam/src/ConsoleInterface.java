@@ -1,5 +1,4 @@
 import java.util.Scanner;
-import java.util.UUID;
 
 public class ConsoleInterface {
     private Scanner scanner;
@@ -120,8 +119,13 @@ public class ConsoleInterface {
         String bookingId = scanner.nextLine();
         Booking booking = travelAgency.getBookingById(Integer.parseInt(bookingId));
         if (booking != null && !booking.isPaid()) {
-            PaymentProcessor paymentProcessor = new PaymentProcessor(booking);
-            paymentProcessor.start();
+            // Using a separate thread for payment processing
+            Runnable paymentTask = () -> {
+                PaymentProcessor paymentProcessor = new PaymentProcessor(booking);
+                paymentProcessor.start();
+            };
+            Thread paymentThread = new Thread(paymentTask);
+            paymentThread.start();
         } else {
             System.out.println("Invalid booking ID or booking already paid.");
         }
@@ -157,7 +161,6 @@ public class ConsoleInterface {
         travelAgency.addProperty(property);
         System.out.println("Property added successfully. Property ID: " + property.getId());
     }
-
 
     private void editProperty() {
         viewProperties();
@@ -214,7 +217,6 @@ public class ConsoleInterface {
         travelAgency.addProperty(property2);
         travelAgency.addProperty(property3);
     }
-
 
     private int readIntegerInput() {
         while (true) {
