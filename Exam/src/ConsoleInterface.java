@@ -98,7 +98,7 @@ public class ConsoleInterface {
         return true; // Stay logged in
     }
 
-    private void searchProperties() {
+    public void searchProperties() {
         System.out.println("Available properties:");
         for (Property property : travelAgency.searchProperties()) {
             System.out.println(property);
@@ -308,10 +308,5 @@ public class ConsoleInterface {
                 System.out.println("Invalid input. Please enter a valid number.");
             }
         }
-    }
-
-    public static void main(String[] args) {
-        ConsoleInterface consoleInterface = new ConsoleInterface();
-        consoleInterface.start();
     }
 }
