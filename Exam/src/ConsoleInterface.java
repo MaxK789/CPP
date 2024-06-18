@@ -90,7 +90,6 @@ public class ConsoleInterface {
                 payForBooking(customer);
                 break;
             case 4:
-                System.out.println("Logging out...");
                 return false; // Logout
             default:
                 System.out.println("Invalid choice. Please enter a valid option.");
@@ -196,7 +195,6 @@ public class ConsoleInterface {
                 viewPropertiesByLandlord(landlord);
                 break;
             case 4:
-                System.out.println("Logging out...");
                 return false; // Logout
             default:
                 System.out.println("Invalid choice. Please enter a valid option.");
