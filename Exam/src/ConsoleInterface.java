@@ -116,13 +116,17 @@ public class ConsoleInterface {
                 Booking booking = new Booking(property, customer);
                 TravelAgency.getInstance().addBooking(booking);
                 System.out.println("Booking successful. Booking ID: " + booking.getBookingId());
+                // After booking completes, handle user actions if currentUser is null
+                if (currentUser == null) {
+                    handleUserActions(customer);
+                }
             });
             bookPropertyThread.start();
         } else {
             System.out.println("Invalid property ID.");
-        }
-        if(currentUser == null) {
-            handleUserActions(customer);
+            if (currentUser == null) {
+                handleUserActions(customer);
+            }
         }
     }
 
@@ -130,6 +134,9 @@ public class ConsoleInterface {
         List<Booking> customerBookings = travelAgency.getBookingsByCustomer(customer);
         if (customerBookings.isEmpty()) {
             System.out.println("You have no bookings to pay for.");
+            if (currentUser == null) {
+                handleUserActions(customer);
+            }
             return;
         }
 
@@ -154,15 +161,20 @@ public class ConsoleInterface {
                 }
 
                 travelAgency.removeBooking(booking); // Remove booking from the list
+                // After payment completes, handle user actions if currentUser is null
+                if (currentUser == null) {
+                    handleUserActions(customer);
+                }
             });
             paymentThread.start();
         } else {
             System.out.println("Invalid booking ID or booking already paid.");
-        }
-        if(currentUser == null) {
-            handleUserActions(customer);
+            if (currentUser == null) {
+                handleUserActions(customer);
+            }
         }
     }
+
 
     private boolean handleLandlordActions(Landlord landlord, int choice) {
         switch (choice) {
