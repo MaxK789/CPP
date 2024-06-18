@@ -105,7 +105,7 @@ public class ConsoleInterface {
         }
     }
 
-    private void bookProperty(Customer customer) {
+    public void bookProperty(Customer customer) {
         searchProperties();
         System.out.print("Enter property ID to book: ");
         String propertyId = scanner.nextLine();
@@ -139,7 +139,7 @@ public class ConsoleInterface {
         }
     }
 
-    private void payForBooking(Customer customer) {
+    public void payForBooking(Customer customer) {
         List<Booking> customerBookings = travelAgency.getBookingsByCustomer(customer);
         if (customerBookings.isEmpty()) {
             System.out.println("You have no bookings to pay for.");
@@ -184,7 +184,6 @@ public class ConsoleInterface {
         }
     }
 
-
     private boolean handleLandlordActions(Landlord landlord, int choice) {
         switch (choice) {
             case 1:
@@ -205,7 +204,7 @@ public class ConsoleInterface {
         return true; // Stay logged in
     }
 
-    private void addProperty(Landlord landlord) {
+    public void addProperty(Landlord landlord) {
         System.out.print("Property name: ");
         String name = scanner.nextLine();
         System.out.print("Description: ");
@@ -227,7 +226,7 @@ public class ConsoleInterface {
         addPropertyThread.start();
     }
 
-    private void editProperty(Landlord landlord) {
+    public void editProperty(Landlord landlord) {
         List<Property> properties = travelAgency.getPropertiesByLandlord(landlord);
         if (properties.isEmpty()) {
             System.out.println("You have no properties listed.");
@@ -264,7 +263,6 @@ public class ConsoleInterface {
             System.out.println("Invalid property ID or you do not own this property.");
         }
     }
-
 
     private void viewPropertiesByLandlord(Landlord landlord) {
         System.out.println("Your properties:");

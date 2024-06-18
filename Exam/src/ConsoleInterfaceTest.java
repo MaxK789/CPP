@@ -41,4 +41,6 @@ public class ConsoleInterfaceTest {
 
         assertEquals(expectedOutput, actualOutput);
     }
+
+
 }
