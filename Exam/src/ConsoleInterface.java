@@ -245,14 +245,26 @@ public class ConsoleInterface {
             String description = scanner.nextLine();
             System.out.print("New price per night: ");
             double pricePerNight = readDoubleInput();
-            property.setName(name);
-            property.setDescription(description);
-            property.setPricePerNight(pricePerNight);
-            System.out.println("Property updated successfully.");
+
+            Thread editPropertyThread = new Thread(() -> {
+                property.setName(name);
+                property.setDescription(description);
+                property.setPricePerNight(pricePerNight);
+
+                try {
+                    Thread.sleep(2000); // Simulate some processing time (2 seconds)
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.out.println("Property updated successfully.");
+            });
+
+            editPropertyThread.start();
         } else {
             System.out.println("Invalid property ID or you do not own this property.");
         }
     }
+
 
     private void viewPropertiesByLandlord(Landlord landlord) {
         System.out.println("Your properties:");
