@@ -4,6 +4,7 @@ import java.util.Scanner;
 public class ConsoleInterface {
     private Scanner scanner;
     private TravelAgency travelAgency;
+    private User currentUser;
 
     public ConsoleInterface() {
         scanner = new Scanner(System.in);
@@ -38,9 +39,9 @@ public class ConsoleInterface {
         String username = scanner.nextLine();
         System.out.print("Password: ");
         String password = scanner.nextLine();
-        User user = travelAgency.authenticate(username, password);
-        if (user != null) {
-            handleUserActions(user);
+        currentUser = travelAgency.authenticate(username, password);
+        if (currentUser != null) {
+            handleUserActions(currentUser);
         } else {
             System.out.println("Invalid credentials.");
         }
@@ -54,8 +55,8 @@ public class ConsoleInterface {
         System.out.println("Register as: 1. Customer 2. Landlord");
         int type = readIntegerInput();
         if (type == 1 || type == 2) {
-            User user = (type == 1) ? new Customer(username, password) : new Landlord(username, password);
-            travelAgency.addUser(user);
+            currentUser = (type == 1) ? new Customer(username, password) : new Landlord(username, password);
+            travelAgency.addUser(currentUser);
             System.out.println("Registration successful.");
         } else {
             System.out.println("Invalid choice. Please enter 1 for Customer or 2 for Landlord.");
@@ -73,6 +74,8 @@ public class ConsoleInterface {
                 loggedIn = handleLandlordActions((Landlord) user, choice);
             }
         }
+        // After loop ends, reset currentUser to null to signify logout
+        currentUser = null;
     }
 
     private boolean handleCustomerActions(Customer customer, int choice) {
@@ -87,6 +90,7 @@ public class ConsoleInterface {
                 payForBooking(customer);
                 break;
             case 4:
+                System.out.println("Logging out...");
                 return false; // Logout
             default:
                 System.out.println("Invalid choice. Please enter a valid option.");
@@ -156,7 +160,6 @@ public class ConsoleInterface {
         handleUserActions(customer);
     }
 
-
     private boolean handleLandlordActions(Landlord landlord, int choice) {
         switch (choice) {
             case 1:
@@ -169,6 +172,7 @@ public class ConsoleInterface {
                 viewPropertiesByLandlord(landlord);
                 break;
             case 4:
+                System.out.println("Logging out...");
                 return false; // Logout
             default:
                 System.out.println("Invalid choice. Please enter a valid option.");
@@ -214,7 +218,6 @@ public class ConsoleInterface {
             System.out.println("Invalid property ID or you do not own this property.");
         }
     }
-
 
     private void viewPropertiesByLandlord(Landlord landlord) {
         System.out.println("Your properties:");
