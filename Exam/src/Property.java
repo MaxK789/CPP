@@ -41,4 +41,16 @@ public class Property {
     public String toString() {
         return "Property ID: " + id + ", Name: " + name + ", Description: " + description + ", Price per night: $" + pricePerNight;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setPricePerNight(double pricePerNight) {
+        this.pricePerNight = pricePerNight;
+    }
 }

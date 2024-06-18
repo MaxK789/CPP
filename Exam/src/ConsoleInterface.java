@@ -107,12 +107,17 @@ public class ConsoleInterface {
         String propertyId = scanner.nextLine();
         Property property = travelAgency.getPropertyById(Integer.parseInt(propertyId));
         if (property != null) {
-            Booking booking = new Booking(property, customer);
-            travelAgency.addBooking(booking);
-            System.out.println("Booking successful. Booking ID: " + booking.getBookingId());
+            Thread bookPropertyThread = new Thread(() -> {
+                System.out.println("Booking process started for property ID: " + property.getId());
+                Booking booking = new Booking(property, customer);
+                TravelAgency.getInstance().addBooking(booking);
+                System.out.println("Booking successful. Booking ID: " + booking.getBookingId());
+            });
+            bookPropertyThread.start();
         } else {
             System.out.println("Invalid property ID.");
         }
+        handleUserActions(customer);
     }
 
     private void payForBooking(Customer customer) {
@@ -133,18 +138,26 @@ public class ConsoleInterface {
 
         Booking booking = travelAgency.getBookingById(bookingId);
         if (booking != null && !booking.isPaid()) {
-            PaymentProcessor paymentProcessor = new PaymentProcessor(booking);
-            paymentProcessor.start();
-            // Assuming payment processing is synchronous and successful
-            booking.setPaid(true);
-            travelAgency.removeBooking(booking); // Remove booking from the list
-            System.out.println("Payment successful for Booking ID: " + booking.getBookingId());
+            Thread paymentThread = new Thread(() -> {
+                System.out.println("Payment process started for Booking ID: " + booking.getBookingId());
+                PaymentProcessor paymentProcessor = new PaymentProcessor(booking);
+                paymentProcessor.start();
+                try {
+                    paymentProcessor.join(); // Wait for payment processor thread to finish
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                travelAgency.removeBooking(booking); // Remove booking from the list
+                System.out.println("Payment successful for Booking ID: " + booking.getBookingId());
+            });
+            paymentThread.start();
         } else {
             System.out.println("Invalid booking ID or booking already paid.");
         }
-
         handleUserActions(customer);
     }
+
 
     private boolean handleLandlordActions(Landlord landlord, int choice) {
         switch (choice) {
@@ -152,7 +165,7 @@ public class ConsoleInterface {
                 addProperty(landlord);
                 break;
             case 2:
-                editProperty();
+                editProperty(landlord);
                 break;
             case 3:
                 viewPropertiesByLandlord(landlord);
@@ -177,25 +190,33 @@ public class ConsoleInterface {
         System.out.println("Property added successfully. Property ID: " + property.getId());
     }
 
-    private void editProperty() {
-        viewProperties();
+    private void editProperty(Landlord landlord) {
+        List<Property> properties = travelAgency.getPropertiesByLandlord(landlord);
+        if (properties.isEmpty()) {
+            System.out.println("You have no properties listed.");
+            return;
+        }
+
+        viewPropertiesByLandlord(landlord);
         System.out.print("Enter property ID to edit: ");
         String propertyId = scanner.nextLine();
         Property property = travelAgency.getPropertyById(Integer.parseInt(propertyId));
-        if (property != null) {
+        if (property != null && properties.contains(property)) {
             System.out.print("New name: ");
             String name = scanner.nextLine();
             System.out.print("New description: ");
             String description = scanner.nextLine();
             System.out.print("New price per night: ");
             double pricePerNight = readDoubleInput();
-            // For simplicity, create a new property and replace the old one.
-            travelAgency.addProperty(new Property(name, description, pricePerNight, property.getLandlord()));
+            property.setName(name);
+            property.setDescription(description);
+            property.setPricePerNight(pricePerNight);
             System.out.println("Property updated successfully.");
         } else {
-            System.out.println("Invalid property ID.");
+            System.out.println("Invalid property ID or you do not own this property.");
         }
     }
+
 
     private void viewPropertiesByLandlord(Landlord landlord) {
         System.out.println("Your properties:");

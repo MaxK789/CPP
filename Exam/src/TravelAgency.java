@@ -6,7 +6,7 @@ public class TravelAgency {
     private static TravelAgency instance = null;
     private List<User> users;
     private List<Property> properties;
-    private List<Booking> bookings;
+    private static List<Booking> bookings;
 
     private TravelAgency() {
         users = new ArrayList<>();
@@ -51,7 +51,7 @@ public class TravelAgency {
         return null;
     }
 
-    public void addBooking(Booking booking) {
+    public static void addBooking(Booking booking) {
         bookings.add(booking);
     }
 
