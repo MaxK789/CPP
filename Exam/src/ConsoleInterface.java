@@ -138,9 +138,12 @@ public class ConsoleInterface {
             // Assuming payment processing is synchronous and successful
             booking.setPaid(true);
             travelAgency.removeBooking(booking); // Remove booking from the list
+            System.out.println("Payment successful for Booking ID: " + booking.getBookingId());
         } else {
             System.out.println("Invalid booking ID or booking already paid.");
         }
+
+        handleUserActions(customer);
     }
 
     private boolean handleLandlordActions(Landlord landlord, int choice) {
