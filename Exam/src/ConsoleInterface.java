@@ -112,13 +112,22 @@ public class ConsoleInterface {
         Property property = travelAgency.getPropertyById(Integer.parseInt(propertyId));
         if (property != null) {
             Thread bookPropertyThread = new Thread(() -> {
-                System.out.println("Booking process started for property ID: " + property.getId());
-                Booking booking = new Booking(property, customer);
-                TravelAgency.getInstance().addBooking(booking);
-                System.out.println("Booking successful. Booking ID: " + booking.getBookingId());
-                // After booking completes, handle user actions if currentUser is null
-                if (currentUser == null) {
-                    handleUserActions(customer);
+                try {
+                    System.out.println("Booking process started for property ID: " + property.getId());
+                    Booking booking = new Booking(property, customer);
+                    TravelAgency.getInstance().addBooking(booking);
+
+                    // Simulating some delay in booking process (for demonstration purposes)
+                    Thread.sleep(2000); // Sleep for 2 seconds (2000 milliseconds)
+
+                    System.out.println("Booking successful. Booking ID: " + booking.getBookingId());
+
+                    // After booking completes, handle user actions if currentUser is null
+                    if (currentUser == null) {
+                        handleUserActions(customer);
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             });
             bookPropertyThread.start();
@@ -203,9 +212,19 @@ public class ConsoleInterface {
         String description = scanner.nextLine();
         System.out.print("Price per night: ");
         double pricePerNight = readDoubleInput();
-        Property property = new Property(name, description, pricePerNight, landlord);
-        travelAgency.addProperty(property);
-        System.out.println("Property added successfully. Property ID: " + property.getId());
+
+        Thread addPropertyThread = new Thread(() -> {
+            Property property = new Property(name, description, pricePerNight, landlord);
+            travelAgency.addProperty(property);
+            try {
+                Thread.sleep(2000); // Simulate some processing time (2 seconds)
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println("Property added successfully. Property ID: " + property.getId());
+        });
+
+        addPropertyThread.start();
     }
 
     private void editProperty(Landlord landlord) {
