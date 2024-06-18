@@ -1,17 +1,19 @@
 public class Booking {
-    private String bookingId;
+    private int bookingId;
     private Property property;
     private Customer customer;
     private boolean paid;
 
-    public Booking(String bookingId, Property property, Customer customer) {
-        this.bookingId = bookingId;
+    private static int nextBookingId = 1; // Static variable to keep track of next available ID
+
+    public Booking(Property property, Customer customer) {
+        this.bookingId = nextBookingId++;
         this.property = property;
         this.customer = customer;
         this.paid = false;
     }
 
-    public String getBookingId() {
+    public int getBookingId() {
         return bookingId;
     }
 

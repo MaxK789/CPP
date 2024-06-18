@@ -54,9 +54,9 @@ public class TravelAgency {
         bookings.add(booking);
     }
 
-    public Booking getBookingById(String id) {
+    public Booking getBookingById(int id) {
         for (Booking booking : bookings) {
-            if (booking.getBookingId().equals(id)) {
+            if (booking.getBookingId() == id) {
                 return booking;
             }
         }

@@ -107,7 +107,7 @@ public class ConsoleInterface {
         String propertyId = scanner.nextLine();
         Property property = travelAgency.getPropertyById(Integer.parseInt(propertyId));
         if (property != null) {
-            Booking booking = new Booking(UUID.randomUUID().toString(), property, customer);
+            Booking booking = new Booking(property, customer);
             travelAgency.addBooking(booking);
             System.out.println("Booking successful. Booking ID: " + booking.getBookingId());
         } else {
@@ -118,7 +118,7 @@ public class ConsoleInterface {
     private void payForBooking(Customer customer) {
         System.out.print("Enter booking ID to pay: ");
         String bookingId = scanner.nextLine();
-        Booking booking = travelAgency.getBookingById(bookingId);
+        Booking booking = travelAgency.getBookingById(Integer.parseInt(bookingId));
         if (booking != null && !booking.isPaid()) {
             PaymentProcessor paymentProcessor = new PaymentProcessor(booking);
             paymentProcessor.start();
@@ -139,12 +139,6 @@ public class ConsoleInterface {
                 viewPropertiesByLandlord(landlord);
                 break;
             case 4:
-                viewCustomers();
-                break;
-            case 5:
-                viewLandlords();
-                break;
-            case 6:
                 return false; // Logout
             default:
                 System.out.println("Invalid choice. Please enter a valid option.");
@@ -192,20 +186,6 @@ public class ConsoleInterface {
         }
     }
 
-    private void viewCustomers() {
-        System.out.println("All customers:");
-        for (Customer customer : travelAgency.getCustomers()) {
-            System.out.println(customer.getUsername());
-        }
-    }
-
-    private void viewLandlords() {
-        System.out.println("All landlords:");
-        for (Landlord landlord : travelAgency.getLandlords()) {
-            System.out.println(landlord.getUsername());
-        }
-    }
-
     private void viewProperties() {
         System.out.println("All properties:");
         for (Property property : travelAgency.searchProperties()) {
@@ -215,14 +195,14 @@ public class ConsoleInterface {
 
     private void initializeDefaultData() {
         // Add default landlords
-        Landlord landlord1 = new Landlord("landlord1", "password1");
-        Landlord landlord2 = new Landlord("landlord2", "password2");
+        Landlord landlord1 = new Landlord("John", "123");
+        Landlord landlord2 = new Landlord("Dan", "123");
         travelAgency.addUser(landlord1);
         travelAgency.addUser(landlord2);
 
         // Add default customers
-        Customer customer1 = new Customer("customer1", "password1");
-        Customer customer2 = new Customer("customer2", "password2");
+        Customer customer1 = new Customer("Alex", "123");
+        Customer customer2 = new Customer("Bill", "123");
         travelAgency.addUser(customer1);
         travelAgency.addUser(customer2);
 
