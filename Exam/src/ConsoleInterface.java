@@ -1,3 +1,4 @@
+import java.util.List;
 import java.util.Scanner;
 
 public class ConsoleInterface {
@@ -115,17 +116,28 @@ public class ConsoleInterface {
     }
 
     private void payForBooking(Customer customer) {
+        List<Booking> customerBookings = travelAgency.getBookingsByCustomer(customer);
+        if (customerBookings.isEmpty()) {
+            System.out.println("You have no bookings to pay for.");
+            return;
+        }
+
+        System.out.println("Your bookings:");
+        for (Booking booking : customerBookings) {
+            System.out.println("Booking ID: " + booking.getBookingId() + ", Property: " + booking.getProperty().getName());
+        }
+
         System.out.print("Enter booking ID to pay: ");
-        String bookingId = scanner.nextLine();
-        Booking booking = travelAgency.getBookingById(Integer.parseInt(bookingId));
+        String bookingIdStr = scanner.nextLine();
+        int bookingId = Integer.parseInt(bookingIdStr);
+
+        Booking booking = travelAgency.getBookingById(bookingId);
         if (booking != null && !booking.isPaid()) {
-            // Using a separate thread for payment processing
-            Runnable paymentTask = () -> {
-                PaymentProcessor paymentProcessor = new PaymentProcessor(booking);
-                paymentProcessor.start();
-            };
-            Thread paymentThread = new Thread(paymentTask);
-            paymentThread.start();
+            PaymentProcessor paymentProcessor = new PaymentProcessor(booking);
+            paymentProcessor.start();
+            // Assuming payment processing is synchronous and successful
+            booking.setPaid(true);
+            travelAgency.removeBooking(booking); // Remove booking from the list
         } else {
             System.out.println("Invalid booking ID or booking already paid.");
         }
@@ -236,5 +248,10 @@ public class ConsoleInterface {
                 System.out.println("Invalid input. Please enter a valid number.");
             }
         }
+    }
+
+    public static void main(String[] args) {
+        ConsoleInterface consoleInterface = new ConsoleInterface();
+        consoleInterface.start();
     }
 }

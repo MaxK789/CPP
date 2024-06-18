@@ -1,4 +1,5 @@
 public class Customer extends User {
+    private double balance;
 
     public Customer(String username, String password) {
         super(username, password);

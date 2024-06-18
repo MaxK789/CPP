@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class TravelAgency {
@@ -54,6 +55,19 @@ public class TravelAgency {
         bookings.add(booking);
     }
 
+    public void removeBooking(Booking booking) {
+        Iterator<Booking> iterator = bookings.iterator();
+        while (iterator.hasNext()) {
+            Booking b = iterator.next();
+            if (b.equals(booking)) {
+                iterator.remove();
+                System.out.println("Booking removed successfully.");
+                return;
+            }
+        }
+        System.out.println("Booking not found.");
+    }
+
     public Booking getBookingById(int id) {
         for (Booking booking : bookings) {
             if (booking.getBookingId() == id) {
@@ -61,6 +75,16 @@ public class TravelAgency {
             }
         }
         return null;
+    }
+
+    public List<Booking> getBookingsByCustomer(Customer customer) {
+        List<Booking> customerBookings = new ArrayList<>();
+        for (Booking booking : bookings) {
+            if (booking.getCustomer().equals(customer)) {
+                customerBookings.add(booking);
+            }
+        }
+        return customerBookings;
     }
 
     public List<Customer> getCustomers() {
