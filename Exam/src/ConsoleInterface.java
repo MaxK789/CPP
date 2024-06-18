@@ -139,7 +139,6 @@ public class ConsoleInterface {
         Booking booking = travelAgency.getBookingById(bookingId);
         if (booking != null && !booking.isPaid()) {
             Thread paymentThread = new Thread(() -> {
-                System.out.println("Payment process started for Booking ID: " + booking.getBookingId());
                 PaymentProcessor paymentProcessor = new PaymentProcessor(booking);
                 paymentProcessor.start();
                 try {
@@ -149,7 +148,6 @@ public class ConsoleInterface {
                 }
 
                 travelAgency.removeBooking(booking); // Remove booking from the list
-                System.out.println("Payment successful for Booking ID: " + booking.getBookingId());
             });
             paymentThread.start();
         } else {
