@@ -121,7 +121,9 @@ public class ConsoleInterface {
         } else {
             System.out.println("Invalid property ID.");
         }
-        handleUserActions(customer);
+        if(currentUser == null) {
+            handleUserActions(customer);
+        }
     }
 
     private void payForBooking(Customer customer) {
@@ -157,7 +159,9 @@ public class ConsoleInterface {
         } else {
             System.out.println("Invalid booking ID or booking already paid.");
         }
-        handleUserActions(customer);
+        if(currentUser == null) {
+            handleUserActions(customer);
+        }
     }
 
     private boolean handleLandlordActions(Landlord landlord, int choice) {
